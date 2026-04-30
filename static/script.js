@@ -1,4 +1,4 @@
-// VoteBot India — Frontend Script
+// VoteBot India — Frontend Script (FIXED VERSION)
 
 let currentLang = 'en';
 let chatHistory = [];
@@ -25,65 +25,53 @@ const translations = {
   }
 };
 
-const topicsHi = [
-  { emoji: '🗳️', label: 'मतदान कैसे करें', query: 'भारत में मतदान की प्रक्रिया क्या है? चरण दर चरण बताएं।' },
-  { emoji: '⚡', label: 'EVM और VVPAT', query: 'EVM (इलेक्ट्रॉनिक वोटिंग मशीन) क्या है और यह कैसे काम करती है?' },
-  { emoji: '🪪', label: 'मतदाता पहचान पत्र', query: 'मतदाता के रूप में पंजीकरण कैसे करें और भारत में मतदाता पहचान पत्र कैसे प्राप्त करें?' },
-  { emoji: '🏛️', label: 'चुनाव आयोग', query: 'भारत का चुनाव आयोग क्या है और वह क्या करता है?' },
-  { emoji: '📜', label: 'आदर्श आचार संहिता', query: 'भारतीय चुनावों में आदर्श आचार संहिता क्या है?' },
-  { emoji: '🏟️', label: 'लोकसभा / राज्यसभा', query: 'लोकसभा और राज्यसभा चुनाव क्या हैं?' },
-  { emoji: '⚖️', label: 'आरक्षण प्रणाली', query: 'भारतीय चुनावों में आरक्षण प्रणाली क्या है?' },
-  { emoji: '📊', label: 'मतगणना', query: 'भारत में चुनाव परिणाम कैसे गिने और घोषित किए जाते हैं?' },
-];
+// ========================
+// INIT (IMPORTANT FIX)
+// ========================
+document.addEventListener("DOMContentLoaded", () => {
+  const sendBtn = document.getElementById("send-btn");
+  const textarea = document.querySelector(".chat-textarea");
 
+  if (sendBtn) {
+    sendBtn.addEventListener("click", sendMessage);
+  }
+
+  if (textarea) {
+    textarea.addEventListener("keydown", handleKey);
+    textarea.addEventListener("input", autoResize);
+  }
+
+  console.log("VoteBot JS Loaded Successfully ✅");
+});
+
+// ========================
+// LANGUAGE SWITCH
+// ========================
 function setLang(lang) {
   currentLang = lang;
   const t = translations[lang];
 
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   document.getElementById('btn-hi').classList.toggle('active', lang === 'hi');
+
   document.getElementById('sidebar-title').textContent = t.sidebarTitle;
   document.getElementById('info-text').textContent = t.infoText;
   document.getElementById('disclaimer').textContent = t.disclaimer;
   document.querySelector('.chat-textarea').placeholder = t.placeholder;
   document.getElementById('welcome-text').innerHTML = t.welcomeText;
-
-  // Update topic buttons if Hindi
-  if (lang === 'hi') {
-    const chips = document.querySelectorAll('.topic-chip');
-    chips.forEach((chip, i) => {
-      if (topicsHi[i]) {
-        chip.querySelector('span').textContent = topicsHi[i].label;
-        chip.setAttribute('onclick', `askTopic('${topicsHi[i].query}')`);
-      }
-    });
-  } else {
-    // Restore English topics
-    const topicsEn = [
-      { emoji: '🗳️', label: 'How to Vote', query: 'How does voting work in India? Step by step process.' },
-      { emoji: '⚡', label: 'EVM & VVPAT', query: 'What is EVM (Electronic Voting Machine) and how does it work?' },
-      { emoji: '🪪', label: 'Voter ID / EPIC', query: 'How do I register as a voter and get Voter ID card in India?' },
-      { emoji: '🏛️', label: 'Election Commission', query: 'What is the Election Commission of India and what does it do?' },
-      { emoji: '📜', label: 'Model Code', query: 'What is Model Code of Conduct in Indian elections?' },
-      { emoji: '🏟️', label: 'Lok Sabha / RS', query: 'What are Lok Sabha and Rajya Sabha elections?' },
-      { emoji: '⚖️', label: 'Reservation', query: 'What is the reservation system in Indian elections?' },
-      { emoji: '📊', label: 'Vote Counting', query: 'How are election results counted and declared in India?' },
-    ];
-    const chips = document.querySelectorAll('.topic-chip');
-    chips.forEach((chip, i) => {
-      if (topicsEn[i]) {
-        chip.querySelector('span').textContent = topicsEn[i].label;
-        chip.setAttribute('onclick', `askTopic('${topicsEn[i].query}')`);
-      }
-    });
-  }
 }
 
+// ========================
+// QUICK TOPIC
+// ========================
 function askTopic(query) {
   document.querySelector('.chat-textarea').value = query;
   sendMessage();
 }
 
+// ========================
+// KEYBOARD SUPPORT
+// ========================
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
@@ -91,36 +79,46 @@ function handleKey(e) {
   }
 }
 
+// ========================
+// AUTO RESIZE TEXTAREA
+// ========================
 function autoResize(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
+// ========================
+// ADD MESSAGE
+// ========================
 function addMessage(role, content) {
-  const window = document.getElementById('chat-window');
+  const windowEl = document.getElementById('chat-window');
 
   const msg = document.createElement('div');
   msg.className = `msg ${role === 'bot' ? 'bot-msg' : 'user-msg'}`;
 
-  if (role === 'bot') {
-    msg.innerHTML = `
+  msg.innerHTML = role === 'bot'
+    ? `
       <div class="bot-avatar">☸</div>
       <div class="msg-bubble">${formatText(content)}</div>
-    `;
-  } else {
-    msg.innerHTML = `<div class="msg-bubble">${escapeHtml(content)}</div>`;
-  }
+    `
+    : `<div class="msg-bubble">${escapeHtml(content)}</div>`;
 
-  window.appendChild(msg);
-  window.scrollTop = window.scrollHeight;
+  windowEl.appendChild(msg);
+  windowEl.scrollTop = windowEl.scrollHeight;
+
   return msg;
 }
 
+// ========================
+// TYPING INDICATOR
+// ========================
 function showTyping() {
-  const window = document.getElementById('chat-window');
+  const windowEl = document.getElementById('chat-window');
+
   const typing = document.createElement('div');
-  typing.className = 'msg bot-msg';
   typing.id = 'typing-indicator';
+  typing.className = 'msg bot-msg';
+
   typing.innerHTML = `
     <div class="bot-avatar">☸</div>
     <div class="msg-bubble">
@@ -129,8 +127,9 @@ function showTyping() {
       </div>
     </div>
   `;
-  window.appendChild(typing);
-  window.scrollTop = window.scrollHeight;
+
+  windowEl.appendChild(typing);
+  windowEl.scrollTop = windowEl.scrollHeight;
 }
 
 function removeTyping() {
@@ -138,13 +137,13 @@ function removeTyping() {
   if (el) el.remove();
 }
 
+// ========================
+// TEXT FORMAT
+// ========================
 function formatText(text) {
-  // Bold **text**
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  // Bullet points
   text = text.replace(/^[-•]\s(.+)/gm, '<li>$1</li>');
   text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-  // Line breaks
   text = text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
   return text;
 }
@@ -156,24 +155,28 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
+// ========================
+// MAIN SEND FUNCTION (FIXED)
+// ========================
 async function sendMessage() {
   if (isLoading) return;
 
   const textarea = document.querySelector('.chat-textarea');
   const message = textarea.value.trim();
+
   if (!message) return;
 
   textarea.value = '';
   textarea.style.height = 'auto';
+
   isLoading = true;
 
-  document.getElementById('send-btn').disabled = true;
+  const sendBtn = document.getElementById('send-btn');
+  if (sendBtn) sendBtn.disabled = true;
 
-  // Add user message
   addMessage('user', message);
   chatHistory.push({ role: 'user', content: message });
 
-  // Show typing
   showTyping();
 
   try {
@@ -188,9 +191,11 @@ async function sendMessage() {
     });
 
     const data = await response.json();
+
     removeTyping();
 
     const reply = data.reply || translations[currentLang].errorMsg;
+
     addMessage('bot', reply);
     chatHistory.push({ role: 'assistant', content: reply });
 
@@ -200,6 +205,8 @@ async function sendMessage() {
   }
 
   isLoading = false;
-  document.getElementById('send-btn').disabled = false;
+
+  if (sendBtn) sendBtn.disabled = false;
+
   textarea.focus();
 }
