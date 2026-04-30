@@ -10,30 +10,26 @@
 
 ---
 
-## 🗳️ VoteBot India – Election Process Education AI
-
----
-
 ## 🚀 Overview
-VoteBot India is an AI-powered chatbot designed to educate citizens about the Indian election system. It simplifies complex election procedures into easy and understandable answers for first-time voters.
+VoteBot India is an AI-powered chatbot designed to educate citizens about the Indian election system. It simplifies complex election procedures into easy, conversational answers for first-time voters.
 
 ---
 
-## 🎯 Problem
-Many citizens, especially first-time voters, face confusion about:
-- How to vote
-- Voter ID registration process
-- Eligibility criteria
-- Election process understanding
+## 🎯 Problem Statement
+Many citizens face confusion about:
+- How to vote in India  
+- Voter ID registration process  
+- Eligibility criteria  
+- Election process (EVM, VVPAT, etc.)
 
 ---
 
 ## 💡 Solution
 An AI chatbot that:
-- Answers election-related queries instantly
-- Provides step-by-step guidance
-- Supports English and Hindi language
-- Improves civic awareness among citizens
+- Gives instant answers to election questions  
+- Provides step-by-step guidance  
+- Supports English and Hindi  
+- Keeps responses simple and neutral  
 
 ---
 
@@ -41,53 +37,54 @@ An AI chatbot that:
 - 🗳️ Voting process explanation  
 - 🆔 Voter ID guidance  
 - ✅ Eligibility checking  
-- 🤖 AI-based question answering  
-- 🌐 Multilingual support (English + Hindi)  
-- ⚡ Fast API backend  
+- 🤖 AI chatbot responses  
+- 🌐 English + Hindi support  
+- ⚡ FastAPI backend  
 
 ---
 
 ## 🧠 Tech Stack
-- Python (FastAPI)
-- HTML / CSS / JavaScript
-- OpenRouter AI (LLM Integration)
-- Prompt Engineering
-- Docker
-- Google Cloud Run
+- Python (FastAPI)  
+- HTML / CSS / JavaScript  
+- OpenRouter AI  
+- Docker  
+- Google Cloud Run / Render  
 
 ---
 
 ## ☁️ Deployment
-This project is containerized using Docker and deployed on **Google Cloud Run** for scalable access and high performance.
-
----
-
-## 🔐 Security
-- API keys stored securely using `.env`
-- `.env` file excluded via `.gitignore`
-
----
-
-## 📌 Future Scope
-- 🌍 Support for more Indian regional languages  
-- 📞 Voice assistant integration  
-- 🏛️ Real-time Election Commission data integration  
-- 📊 User analytics dashboard  
+Dockerized and deployed for public access.
 
 ---
 
 ## 🌐 Live Demo
-
-🚀 The project is deployed and live here:
-
-🔗 **https://votebot-india.onrender.com/**
+https://votebot-india.onrender.com/
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://votebot-india.onrender.com/)
 
-### ⚡ Try asking:
-- "How to vote in India?"
-- "What is EVM?"
-- "मतदाता पहचान पत्र कैसे बनाएं?"
+---
+
+## 🎯 Chosen Vertical
+Election Process Education Assistant (AI Civic Tech Bot)
+
+---
+
+## 🧠 How It Works
+User → Frontend → FastAPI → OpenRouter AI → Response → UI
+
+---
+
+## 🔐 Security
+- API keys stored in `.env`  
+- `.env` excluded from GitHub  
+
+---
+
+## 📌 Future Scope
+- Regional language support  
+- Voice assistant  
+- Election Commission API integration  
+- Analytics dashboard  
 
 ---
 
@@ -96,4 +93,4 @@ Harsh
 
 ---
 
-> *Jai Hind! 🇮🇳 Every vote matters.*
+🇮🇳 Jai Hind! Every vote matters.
