@@ -4,13 +4,14 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 load_dotenv()
 
 app = FastAPI(title="VoteBot India")
 
-# CORS enable
+# ================= CORS =================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,11 +19,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# API Key
+# ================= STATIC FILES FIX =================
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# ================= ENV =================
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-# Free models fallback
 FREE_MODELS = [
     "google/gemma-4-31b-it:free",
     "nvidia/nemotron-3-super:free",
@@ -31,54 +34,42 @@ FREE_MODELS = [
     "minimax/minimax-m2.5:free",
 ]
 
-# Prompts
 SYSTEM_PROMPT_EN = """
 You are VoteBot India — AI assistant for Indian elections.
-
-RULES:
 - English only
-- Short 2-3 lines
-- Simple friendly tone
-- Politically neutral
+- short answers
+- simple tone
+- neutral
 """
 
 SYSTEM_PROMPT_HI = """
-आप VoteBot India हैं — भारतीय चुनावों के लिए AI सहायक।
-
-नियम:
-- केवल हिंदी में उत्तर दें
-- छोटा और सरल जवाब
-- निष्पक्ष रहें
+आप VoteBot India हैं — भारतीय चुनावों का AI सहायक।
+- केवल हिंदी
+- छोटा जवाब
+- निष्पक्ष
 """
 
-# Request body
+# ================= REQUEST =================
 class ChatRequest(BaseModel):
     message: str
     language: str = "en"
     history: list = []
 
-# =========================
-# HOME ROUTE (UI FIX)
-# =========================
+# ================= HOME PAGE =================
 @app.get("/", response_class=HTMLResponse)
 async def home():
     try:
         with open("static/index.html", "r", encoding="utf-8") as f:
-            return HTMLResponse(content=f.read())
-    except Exception:
-        return HTMLResponse("<h1>VoteBot India API Running 🚀</h1>")
+            return HTMLResponse(f.read())
+    except:
+        return HTMLResponse("<h1>VoteBot India Running 🚀</h1>")
 
-# =========================
-# CHAT API
-# =========================
+# ================= CHAT =================
 @app.post("/chat")
 async def chat(req: ChatRequest):
 
     if not OPENROUTER_API_KEY:
-        return JSONResponse({
-            "status": "error",
-            "reply": "Missing OPENROUTER_API_KEY in environment"
-        })
+        return JSONResponse({"status": "error", "reply": "Missing API Key"})
 
     system_prompt = SYSTEM_PROMPT_HI if req.language == "hi" else SYSTEM_PROMPT_EN
 
@@ -95,11 +86,7 @@ async def chat(req: ChatRequest):
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://votebot-india.com",
-        "X-Title": "VoteBot India"
     }
-
-    last_error = None
 
     for model in FREE_MODELS:
         try:
@@ -111,13 +98,9 @@ async def chat(req: ChatRequest):
             }
 
             async with httpx.AsyncClient(timeout=30) as client:
-                response = await client.post(
-                    OPENROUTER_URL,
-                    json=payload,
-                    headers=headers
-                )
+                r = await client.post(OPENROUTER_URL, json=payload, headers=headers)
 
-            data = response.json()
+            data = r.json()
 
             if "choices" in data:
                 return {
@@ -125,19 +108,12 @@ async def chat(req: ChatRequest):
                     "reply": data["choices"][0]["message"]["content"]
                 }
 
-            last_error = data
+        except:
+            continue
 
-        except Exception as e:
-            last_error = str(e)
+    return {"status": "error", "reply": "AI failed"}
 
-    return {
-        "status": "error",
-        "reply": f"AI failed: {last_error}"
-    }
-
-# =========================
-# HEALTH CHECK (RENDER)
-# =========================
+# ================= HEALTH =================
 @app.get("/health")
 async def health():
-    return {"status": "healthy", "service": "VoteBot India"}
+    return {"status": "healthy"}
