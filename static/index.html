@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VoteBot India — Election Education AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="ashoka-wheel">☸</div>
+        <div class="brand-text">
+          <span class="brand-name">VoteBot <span class="brand-india">India</span></span>
+          <span class="brand-tagline">Your AI Election Guide</span>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">English</button>
+        <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
+    </div>
+    <div class="tricolor-bar">
+      <div class="bar saffron"></div>
+      <div class="bar white"></div>
+      <div class="bar green"></div>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <!-- Sidebar: Quick Topics -->
+    <aside class="sidebar">
+      <h3 class="sidebar-title" id="sidebar-title">Quick Topics</h3>
+      <div class="topic-grid">
+        <button class="topic-chip" onclick="askTopic('How does voting work in India? Step by step process.')">
+          🗳️ <span>How to Vote</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('What is EVM (Electronic Voting Machine) and how does it work?')">
+          ⚡ <span>EVM & VVPAT</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('How do I register as a voter and get Voter ID card in India?')">
+          🪪 <span>Voter ID / EPIC</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('What is the Election Commission of India and what does it do?')">
+          🏛️ <span>Election Commission</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('What is Model Code of Conduct in Indian elections?')">
+          📜 <span>Model Code</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('What are Lok Sabha and Rajya Sabha elections?')">
+          🏟️ <span>Lok Sabha / RS</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('What is the reservation system in Indian elections?')">
+          ⚖️ <span>Reservation</span>
+        </button>
+        <button class="topic-chip" onclick="askTopic('How are election results counted and declared in India?')">
+          📊 <span>Vote Counting</span>
+        </button>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">💡</div>
+        <p id="info-text">Ask me anything about Indian elections — in English or Hindi!</p>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <section class="chat-section">
+      <div class="chat-window" id="chat-window">
+        <!-- Welcome Message -->
+        <div class="msg bot-msg welcome-msg">
+          <div class="bot-avatar">☸</div>
+          <div class="msg-bubble">
+            <p id="welcome-text">Jai Hind! 🇮🇳 I'm <strong>VoteBot India</strong> — your AI guide to understanding Indian elections.<br><br>Ask me about voting, EVM, Voter ID, Election Commission, or any election topic. You can also ask in <strong>Hindi!</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="input-row">
+          <textarea
+            id="user-input"
+            class="chat-textarea"
+            placeholder="Ask about elections... (English or Hindi)"
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <p class="disclaimer" id="disclaimer">VoteBot is neutral and educational. It does not support any political party.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
